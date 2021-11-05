@@ -1,0 +1,162 @@
+1.Create tables for the above list given
+
+create table users (
+userid varchar(10) not null, 
+fullname char(50), 
+city char(50),
+mentor_id varchar(10),
+primary key (userid),
+foreign key (mentor_id) references mentors(id));
+
+create table codekata(
+objid varchar(10) not null,
+userid varchar(10) not null, 
+NoOfProblemsSolved int, 
+noOfProblemsPending int,
+primary key(objid),
+foreign key(userid) references users(userid));
+
+create table mentors (id varchar(10) not null , 
+name varchar(50), 
+primary key(id));
+
+create table topics (id varchar(10) not null, 
+topic_name varchar(20), taughtOn date, task_id varchar(10),
+primary key(id),
+foreign key (task_id) references tasks(task_id)) ;
+
+create table tasks (task_id varchar(10) not null,
+task_title varchar(50), 
+task_description varchar(100),
+primary key (task_id));
+
+create table courses (course_id varchar(10) not null, 
+course_name varchar(50),
+primary key(course_id));
+
+
+create table students_activated_courses(id varchar(10) not null,
+userid varchar(10),
+course_id varchar(10), 
+primary key(id),
+foreign key (course_id) references courses(course_id),
+foreign key (userid) references users(userid));
+
+create table attendance (userid varchar(10)not null,
+class_date date,
+isClassAttended char(1),
+primary key (userid));
+
+create table company_drives(company_id varchar(10) not null, 
+company_name varchar(20),
+drive_date date,
+primary key (company_id));
+
+create table drivesToUser (objid int, userid varchar(10), company_id varchar(10),
+primary key(objid),
+foreign key (userid) references users(userid),
+foreign key(company_id) references company_drives(company_id));
+
+	
+
+2.Insert at least 5 rows of values in each table
+
+Data inserted in users table
+insert into users values('1','Shubham Haval','Miraj','m1');
+insert into users values('2','Yogesh Mule','New Jersy','m1');
+insert into users values('3','Shreyas Haval','kolhapur','m4');
+insert into users values('4','Swati Haval','Miraj','m5');
+insert into users values('5','Aahan Mule','New Jersy','m4');
+
+Data inserted  in codekata table
+insert into codekata values(101, 1, 75, 25);
+insert into codekata values(102, 2, 65, 35);
+insert into codekata values(103, 3, 50, 50);
+insert into codekata values(104, 4, 89, 11);
+insert into codekata values(105, 5, 58, 42);
+
+Data inserted in students_activated_courses
+insert into students_activated_courses values('1','1','c1');
+insert into students_activated_courses values('2','2','c3');
+insert into students_activated_courses values('3','3','c2');
+insert into students_activated_courses values('4','4','c2');
+insert into students_activated_courses values('5','5','c1');
+
+Data inserted in topics table
+insert into topics values ('tp1','HTML',STR_TO_DATE('09/01/2021','%m/%d/%Y'),'t1');
+insert into topics values ('tp2','CSS',STR_TO_DATE('09/03/2021','%m/%d/%Y'),'t2');
+insert into topics values ('tp3','Javascript',STR_TO_DATE('09/5/2021','%m/%d/%Y'),'t3');
+insert into topics values ('tp4','React',STR_TO_DATE('09/12/2021','%m/%d/%Y'),'t4');
+insert into topics values ('tp5','MySQL',STR_TO_DATE('09/18/2021','%m/%d/%Y'),'t5');
+
+Data inserted in tasks table
+insert into tasks values('t1','HTML tags','Read and try all HTML tags');
+insert into tasks values('t2','CSS Properties','Read and try all CSS Properties');
+insert into tasks values('t3','Javascript DOM','Design webpage using DOM');
+insert into tasks values('t4','React Hooks','Create webapp using React Hooks');
+insert into tasks values('t5','MySQL DB design','Design DB for hotel management');
+
+Data inserted in courses table
+insert into courses values('c1','HTML Basics');
+insert into courses values('c2','CSS Basics');
+insert into courses values('c3','Javascript full course');
+insert into courses values('c4','React Hooks');
+insert into courses values('c5','MySQL basics');
+
+Data inserted in mentors table
+insert into mentors values('m1','S. Sharma');
+insert into mentors values('m2','R. Rao');
+insert into mentors values('m3','P. Ravi');
+insert into mentors values('m4','M. Anil');
+insert into mentors values('m5','S. kapoor');
+
+Data inserted in attendance table
+insert into attendance values('1',STR_TO_DATE('09/01/2021','%m/%d/%Y'),'Y');
+insert into attendance values('2',STR_TO_DATE('09/03/2021','%m/%d/%Y'),'Y');
+insert into attendance values('3',STR_TO_DATE('09/05/2021','%m/%d/%Y'),'N');
+insert into attendance values('4',STR_TO_DATE('09/12/2021','%m/%d/%Y'),'N');
+insert into attendance values('5',STR_TO_DATE('09/18/2021','%m/%d/%Y'),'Y');
+
+Data inserted in company_drives table
+insert into company_drives values('AMD','Amdocs',STR_TO_DATE('10/01/2021','%m/%d/%Y'));
+insert into company_drives values('MT','Mindtree',STR_TO_DATE('10/05/2021','%m/%d/%Y'));
+insert into company_drives values('BW','Bitwise',STR_TO_DATE('10/10/2021','%m/%d/%Y'));
+insert into company_drives values('CZ','Cognizant',STR_TO_DATE('10/15/2021','%m/%d/%Y'));
+insert into company_drives values('IFS','Infosys',STR_TO_DATE('10/20/2021','%m/%d/%Y')); 
+
+Data inserted in drivesToUser table
+insert into drivesToUser values(1,'1','AMD');
+insert into drivesToUser values(2,'1','CZ');
+insert into drivesToUser values(3,'2','IFS');
+insert into drivesToUser values(4,'3','AMD'); 
+insert into drivesToUser values(5,'3','MT');
+insert into drivesToUser values(6,'3','BW');
+insert into drivesToUser values(7,'4','CZ');
+insert into drivesToUser values(8,'5','MT');
+
+
+3. Get number problems solved in codekata by combining the users
+
+select a.userid, a.fullname, b.noOfProblemsSolved, b.noOfProblemsPending 
+from users a, codekata b
+where a.userid = b.userid;
+
+4. display the no of company drives attended by a user
+
+select a.userid, a.fullname, count(a.userid)as noOfDriveAttended from users a, company_drives b, drivesToUser c 
+where a.userid = c.userid and c.company_id = b.company_id group by userid;
+
+5. combine and display students_activated_courses and courses for a specific user groping them based on the course
+
+select a.userid, a.fullname, b.course_id,b.course_name from users a, courses b, students_activated_courses c 
+where b.course_id = c.course_id and c.userid = a.userid;
+
+6. List all the mentors
+
+select * from mentors;
+
+7. List the number of students that are assigned for a mentor
+
+select name, count(name) as noOfStudentsAssigned from mentors a, users b where a.id = b.mentor_id group by a.name;
+
+
